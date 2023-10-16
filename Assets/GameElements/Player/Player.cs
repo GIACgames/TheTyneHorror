@@ -319,4 +319,8 @@ public class Player : MonoBehaviour
         if (!boat.isHoldingOars) {boat.GrabOars();}
         isGrabbing = true;
     }
+    public void OnAnimUpdate(float frameDelta)
+    {
+        
+    }
 }

@@ -1,10 +1,14 @@
 Shader "Unlit/PSXPostProcess"
 {
+
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
         _XPixelSize("PixelSizeX", float) = 0.02
         _YPixelSize("PixelSizeY", float) = 0.02
+        _Red ("Red", Int) = 8
+		_Green ("Green", Int) = 8
+		_Blue ("Blue", Int) = 8
     }
     SubShader
     {
@@ -39,6 +43,10 @@ Shader "Unlit/PSXPostProcess"
             float _XPixelSize;
             float _YPixelSize;
 
+            uniform int _Red;
+	  		uniform int _Green;
+	  		uniform int _Blue;
+
             v2f vert (appdata v)
             {
                 v2f o;
@@ -59,6 +67,11 @@ Shader "Unlit/PSXPostProcess"
                 //col.r = 1;
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, col);
+
+                col.r = floor(col.r * _Red) / _Red;
+				col.g = floor(col.g * _Green) / _Green;
+				col.b = floor(col.b * _Blue) / _Blue;
+
                 return col;
             }
             ENDCG

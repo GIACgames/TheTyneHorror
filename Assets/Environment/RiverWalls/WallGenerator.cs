@@ -6,6 +6,7 @@ using UnityEngine;
 public class WallGenerator : MonoBehaviour
 {
     public Transform player;
+    public WallGenerator oppositeWallG;
     public Transform[] wallPoints;
     public GameObject wallPrefab;
     public bool debugLine;
@@ -101,7 +102,10 @@ public class WallGenerator : MonoBehaviour
             wallPool[curInstanceIndx].right = dir;
             //wallPool[curInstanceIndx].rotation = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(0, 90 ,0);
             bool flipZ = false;
-            if (Vector3.Distance(wallPool[curInstanceIndx].forward, (wallPool[curInstanceIndx].position - player.position).normalized) > 1.5f) {flipZ = true;}
+            if (oppositeWallG != null && oppositeWallG.wallPoints.Length > b && oppositeWallG.wallPoints.Length > a){
+            if (Vector3.Distance(wallPool[curInstanceIndx].forward, (wallPool[curInstanceIndx].position - ((oppositeWallG.wallPoints[a].position + oppositeWallG.wallPoints[b].position) * 0.5f)).normalized) > 1.5f) {flipZ = true;}}
+            else if (player != null){
+            if (Vector3.Distance(wallPool[curInstanceIndx].forward, (wallPool[curInstanceIndx].position - player.position).normalized) > 1.5f) {flipZ = true;}}
             wallPool[curInstanceIndx].localScale = new Vector3(newWallLength,wallPool[curInstanceIndx].localScale.y,Mathf.Abs(wallPool[curInstanceIndx].localScale.z) * (flipZ ? -1: 1));
             curInstanceIndx = (curInstanceIndx + 1) % wallInstanceCount;
         }
