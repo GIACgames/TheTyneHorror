@@ -17,6 +17,7 @@ public class WallGenerator : MonoBehaviour
     int curInstanceIndx = 0;
     int nearestPoint;
     int lastNearestPoint;
+    public Color debugCol = Color.red;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,15 +28,21 @@ public class WallGenerator : MonoBehaviour
         }
     }
 
-    void Update()
+    void OnDrawGizmos()
     {
         if (debugLine)
         {
+            Gizmos.color = debugCol;
             for (int i = 0; i < transform.childCount - 1; i++)
             {
-                Debug.DrawLine(transform.GetChild(i).position, transform.GetChild(i + 1).position, Color.red);
+                Gizmos.DrawLine(transform.GetChild(i).position, transform.GetChild(i + 1).position);
             }
         }
+    }
+
+    void Update()
+    {
+       
         if (setUpWallPoints)
         {
             setUpWallPoints = false;
