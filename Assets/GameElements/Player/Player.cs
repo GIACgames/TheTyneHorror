@@ -17,9 +17,11 @@ public class PossibleInter
 }
 public class Player : MonoBehaviour
 {
+    public Rigidbody pRb;
     public Boat boat;
     public Transform head;
     public Transform body;
+    public bool inBoat = true;
     public Animator handAnim;
     public bool isGrabbing;
 
@@ -36,6 +38,12 @@ public class Player : MonoBehaviour
     public float interViewDistance;
     public LayerMask interLM;
     public Material outlineMat;
+    Vector2 curSimVeloc;
+    public float walkSpeed = 5;
+    public float walkAccel = 1;
+    public float headBobAmount;
+    public float headBobSpeed;
+    float headBobVal;
     
     // Start is called before the first frame update
     void Start()
@@ -51,6 +59,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         
+        ManageBody();
         ManageLook();
         if (grabbedObj != null)
         {
@@ -61,9 +70,65 @@ public class Player : MonoBehaviour
         ManageGrabbedObject();
 
     }
+    public void ManageBody()
+    {
+        if (inBoat)
+        {
+            boat.playerInBoat = true;
+            if (pRb != null)
+            {
+                Destroy(pRb);
+                head.localPosition = new Vector3(0,1.096f, 0);
+            }
+            if (body.parent != boat.playerHolder)
+            {
+                body.parent = boat.playerHolder;
+                body.localPosition = Vector3.zero;
+                body.localRotation = Quaternion.identity;
+                
+            }
+        }
+        else
+        {
+            if (boat != null)
+            {
+                boat.playerInBoat = false;
+            }
+            if (pRb == null)
+            {
+                pRb = body.gameObject.AddComponent<Rigidbody>();
+                pRb.constraints = RigidbodyConstraints.FreezeRotation;
+                head.localPosition = new Vector3(0,1.7f, 0);
+            }
+            if (body.parent == boat.playerHolder)
+            {
+                body.parent = null;
+                
+                //body.localPosition = Vector3.zero;
+                //body.localRotation = Quaternion.identity;
+            }
+            curSimVeloc = Vector2.zero;
+            Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            curSimVeloc.x += moveInput.x;
+            curSimVeloc.y += moveInput.y;
+            
+            Vector3 localVeloc = body.InverseTransformDirection(pRb.velocity);
+            localVeloc = new Vector3(curSimVeloc.x * (walkSpeed * 0.75f), localVeloc.y, curSimVeloc.y * walkSpeed);
+            pRb.velocity = Vector3.MoveTowards(pRb.velocity, body.TransformDirection(localVeloc), walkAccel * Time.deltaTime);
+            if (curSimVeloc.y != 0)
+            {
+                headBobVal =  Mathf.Lerp(headBobVal, Mathf.Sin(Time.time * walkSpeed * headBobSpeed) * curSimVeloc.y * headBobAmount, 30f * Time.deltaTime);
+            }
+            else
+            {
+                headBobVal = Mathf.Lerp(headBobVal,0, 30f * Time.deltaTime);
+            }
+            head.localPosition = new Vector3(0,1.7f + headBobVal, 0);
+        }
+    }
     public void ManageLook()
     {
-        bool noLookBehind = (boat != null && boat.isHoldingOars);
+        bool noLookBehind = (inBoat && boat != null && boat.isHoldingOars);
         Vector2 lookInput = new Vector2(Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"));
         float bodYSpeedMultiplier = 1;
         float bodY = body.localEulerAngles.y;
@@ -321,6 +386,13 @@ public class Player : MonoBehaviour
     }
     public void OnAnimUpdate(float frameDelta)
     {
-        
+
+    }
+    public void ExitBoat(Vector3 exitPos,Quaternion exitRot, int exId = -1)
+    {
+        inBoat = false;
+        body.parent = null;
+        body.position = exitPos;
+        body.rotation = exitRot;
     }
 }

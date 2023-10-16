@@ -12,10 +12,10 @@ TagManager:
   - 
   - Water
   - UI
-  - Boat
+  - Interactable
   - BoatCollisionOnly
   - SceneViewOnly
-  - 
+  - Boat
   - 
   - 
   - 

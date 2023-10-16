@@ -10,6 +10,7 @@ public class Boat : MonoBehaviour
     public Transform lanternHolder;
     public LanternInteractable lanternInter;
     public Transform playerHolder;
+    public bool playerInBoat = true;
     public bool isHoldingOars;
     public float maxRowVeloc;
     public float curRowVeloc;
@@ -55,10 +56,10 @@ public class Boat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        if (!isHoldingOars)
+        Vector2 moveInput = Vector2.zero;
+        if (isHoldingOars)
         {
-            moveInput = Vector2.zero;
+            if (playerInBoat) {moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));}
         }
         Vector2 newRowSpeed = Vector2.zero;
         newRowSpeed.y += moveInput.y;
