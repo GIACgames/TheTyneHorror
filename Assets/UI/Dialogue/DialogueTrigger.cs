@@ -17,6 +17,13 @@ public class DialogueTrigger : MonoBehaviour
     {
         dialogueIndex = 0;
     }
+    void Update()
+    {
+        if (Input.GetKeyDown("r"))
+        {
+            triggerDialogue();
+        }
+    }
 
     public void triggerDialogue() // Call from button, or when in range of NPC, or when interacted with NPC, etc.
     {

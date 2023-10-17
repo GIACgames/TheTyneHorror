@@ -46,7 +46,10 @@ public class DialogueHandler : MonoBehaviour
         dialogueObject.text = currentDialogue;
 
     }
-
+    public void StartDialogue(DialogueScriptableObject dialogueSO)
+    {
+        StartCoroutine(startDialogueEnum(dialogueSO));
+    }
     public IEnumerator startDialogueEnum(DialogueScriptableObject dialogue)
         // Enum for displaying and cycling dialogue strings
     {

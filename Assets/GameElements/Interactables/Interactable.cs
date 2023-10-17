@@ -23,7 +23,7 @@ public class Interactable : MonoBehaviour
     public int[] pickedUpInterTypes;
     public float interViewDist = 0.3f;
     public float interDist = 5;
-    public MeshRenderer[] mRenderers;
+    public Renderer[] mRenderers;
     
 
     public virtual void Grab()
@@ -65,7 +65,7 @@ public class Interactable : MonoBehaviour
         if (!isSelected)
         {
             isSelected = true;
-            foreach (MeshRenderer mR in mRenderers)
+            foreach (Renderer mR in mRenderers)
             {
                 //mR.sharedMaterial = pl.outlineMat;
                 /*Material[] mats = new Material[mR.sharedMaterials.Length + 1];
@@ -87,7 +87,7 @@ public class Interactable : MonoBehaviour
         if (isSelected)
         {
             isSelected = false;
-            foreach (MeshRenderer mR in mRenderers)
+            foreach (Renderer mR in mRenderers)
             {
                 /*Material[] mats = new Material[mR.sharedMaterials.Length - 1];
                 if (mats.Length > 0)

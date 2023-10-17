@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff2ac1a67b9afd14089f95552eb1299c, type: 3}
+  m_Name: John-0
+  m_EditorClassIdentifier: 
+  characterName: John
+  dialogueStrings:
+  - Agh what are yer doing out this late! This is no time fer a leisure cruise.
+  - These waters are dangerous yknow, an I don't just mean cause of the tide. There
+    be something lurking in the river Tyne.
+  - aye something ungodly. Yer kiddos as good as dead...
+  - Suppose yer wouldn't be much of a father if ya didn't at least look fer him though.
+  - 'At least take me cross from me cabin on the dock, might serve ye some protection
+    of sorts. I''ll move me boat outer yer way when yer back. '
