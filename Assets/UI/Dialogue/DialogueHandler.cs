@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -14,6 +16,10 @@ public class DialogueHandler : MonoBehaviour
     public bool dialgoueEnumFlag;
     public string currentCharacterSpeaking;
     public string currentDialogue;
+    #endregion
+
+    #region Dialogue Typing Effect
+    public bool textTypingEffectFlag;
     #endregion
 
     private void Awake()
@@ -38,6 +44,7 @@ public class DialogueHandler : MonoBehaviour
         // Change the text being displayed
         characterNameObject.text = currentCharacterSpeaking;
         dialogueObject.text = currentDialogue;
+
     }
 
     public IEnumerator startDialogueEnum(DialogueScriptableObject dialogue)
@@ -48,6 +55,7 @@ public class DialogueHandler : MonoBehaviour
         Debug.Log("Coroutine Begins");
         Queue<string> dialogueStrings = new Queue<string>(); // Creates a queue to hold dialogue strings
         dialogueStrings.Clear(); // Ensures queue is empty
+        string newDialogue;
         
         if (dialogue.dialogueStrings == null) // Check if there are no Dialogue strings
         {
@@ -62,8 +70,16 @@ public class DialogueHandler : MonoBehaviour
         }
 
         
-        currentDialogue = dialogueStrings.Dequeue(); // Plays the Initial string
         currentCharacterSpeaking = dialogue.characterName; // Changes the character name to who is currently speaking
+        newDialogue = dialogueStrings.Dequeue(); // Gets the new dialogue from the queue
+        currentDialogue = ""; // Reset Current Dialogue string
+        for (int i = 0; i < newDialogue.Length; i++)
+        // Iterate through string and add each letter to the current dialogue after 0.1 seconds
+        {
+            currentDialogue += newDialogue[i];
+            yield return new WaitForSeconds(0.1f);
+        }
+
         bool exitloop = false; // While loop exit bool 
         while (!exitloop) // For cycling through dialogue strings when Space is pressed
         {
@@ -77,7 +93,14 @@ public class DialogueHandler : MonoBehaviour
             {
                 if (dialogueStrings.Count >= 1) 
                 { 
-                    currentDialogue = dialogueStrings.Dequeue();
+                    newDialogue = dialogueStrings.Dequeue(); // Gets the new dialogue from the queue
+                    currentDialogue = ""; // Reset Current Dialogue string
+                    for (int i = 0; i < newDialogue.Length; i++)
+                    // Iterate through string and add each letter to the current dialogue after 0.1 seconds
+                    {
+                        currentDialogue += newDialogue[i];
+                        yield return new WaitForSeconds(0.1f);
+                    }
                 }
                 else
                 {
