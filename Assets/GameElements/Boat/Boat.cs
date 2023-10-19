@@ -8,6 +8,7 @@ public class Boat : MonoBehaviour
     public Player player;
     public Animator boatAnim;
     public Transform lanternHolder;
+    public Transform boatCrossDrop;
     public LanternInteractable lanternInter;
     public Transform playerHolder;
     public bool playerInBoat = true;

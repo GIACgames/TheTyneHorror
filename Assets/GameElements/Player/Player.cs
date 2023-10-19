@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     public Color[] interCols;
     public PlayerHand[] playerHands;
     public Interactable grabbedObj;
+    public Transform bodCrossDrop;
     public Transform itemEventTarget;
     public Vector2 lookSensitivity;
     public Interactable selectedInteractable;
@@ -40,6 +41,7 @@ public class Player : MonoBehaviour
     public Material outlineMat;
     Vector2 curSimVeloc;
     public float walkSpeed = 5;
+    public float sprintMultiplier = 2;
     public float walkAccel = 1;
     public float headBobAmount;
     public float headBobSpeed;
@@ -54,7 +56,10 @@ public class Player : MonoBehaviour
             playerHands[i].handIndex = i;
         }
     }
-
+    void LateUpdate()
+    {
+        itemPOV.position = head.position;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -111,13 +116,18 @@ public class Player : MonoBehaviour
             Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
             curSimVeloc.x += moveInput.x;
             curSimVeloc.y += moveInput.y;
+            float moveSpeed = walkSpeed;
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                moveSpeed *= sprintMultiplier;
+            }
             
             Vector3 localVeloc = body.InverseTransformDirection(pRb.velocity);
-            localVeloc = new Vector3(curSimVeloc.x * (walkSpeed * 0.75f), localVeloc.y, curSimVeloc.y * walkSpeed);
+            localVeloc = new Vector3(curSimVeloc.x * (moveSpeed * 0.75f), localVeloc.y, curSimVeloc.y * moveSpeed);
             pRb.velocity = Vector3.MoveTowards(pRb.velocity, body.TransformDirection(localVeloc), walkAccel * Time.deltaTime);
             if (curSimVeloc.y != 0)
             {
-                headBobVal =  Mathf.Lerp(headBobVal, Mathf.Sin(Time.time * walkSpeed * headBobSpeed) * curSimVeloc.y * headBobAmount, 30f * Time.deltaTime);
+                headBobVal =  Mathf.Lerp(headBobVal, Mathf.Sin(Time.time * moveSpeed * headBobSpeed) * curSimVeloc.y * headBobAmount, 30f * Time.deltaTime);
             }
             else
             {
@@ -221,7 +231,7 @@ public class Player : MonoBehaviour
         {
         // itemPOV.position += (disp.normalized * (dist - maxIPOVDist));
         }
-        itemPOV.position = Vector3.Lerp(itemPOV.position, head.position, 0.1f);
+        //Vector3.Lerp(itemPOV.position, head.position, 0.1f);
         itemPOV.rotation = Quaternion.Lerp(itemPOV.rotation, head.rotation, 0.1f);
         if (grabbedObj != null && grabbedObj.pickedUp)
         {
@@ -252,7 +262,7 @@ public class Player : MonoBehaviour
         {
             
             Interactable inter = col.GetComponent<Interactable>();
-            if (inter != null && inter.selectable && inter != grabbedObj && (inter.interType == 0 || (grabbedObj != null &&  IntInArray(inter.interType, grabbedObj.pickedUpInterTypes))))
+            if (inter != null && inter.selectable && (!inter.boatOnly || inBoat) && inter != grabbedObj && (inter.interType == 0 || (grabbedObj != null &&  IntInArray(inter.interType, grabbedObj.pickedUpInterTypes))))
             {
                 Vector3 disp = inter.interPoint.position - head.position;
                 float dist = disp.magnitude; float viewDist = Vector3.Distance(disp.normalized,head.forward);
@@ -284,7 +294,7 @@ public class Player : MonoBehaviour
         for (int pI = 0; pI < possibleInters.Count; pI++)
         {
             PossibleInter pInter = possibleInters[pI];
-            if (!pInter.inter.selectable || Time.time - pInter.timeDet > 0.1f || pInter.inter == grabbedObj || !(pInter.inter.interType == 0 || (grabbedObj != null &&  IntInArray(pInter.inter.interType, grabbedObj.pickedUpInterTypes))))
+            if (!pInter.inter.selectable || !(!pInter.inter.boatOnly || inBoat) || Time.time - pInter.timeDet > 0.1f || pInter.inter == grabbedObj || !(pInter.inter.interType == 0 || (grabbedObj != null &&  IntInArray(pInter.inter.interType, grabbedObj.pickedUpInterTypes))))
             {
                 pIToRemove = pI;
             }
@@ -310,7 +320,7 @@ public class Player : MonoBehaviour
             {
                 //print("HIT " + hit.collider.gameObject.name);
                 Interactable inter = hit.collider.gameObject.GetComponent<Interactable>();
-                if (inter != null && inter.selectable && inter != grabbedObj && (inter.interType == 0 || (grabbedObj != null &&  IntInArray(inter.interType, grabbedObj.pickedUpInterTypes))))
+                if (inter != null && inter.selectable && (!inter.boatOnly || inBoat) && inter != grabbedObj && (inter.interType == 0 || (grabbedObj != null &&  IntInArray(inter.interType, grabbedObj.pickedUpInterTypes))))
                 {
                     selectedInteractable = inter;
                 }
@@ -390,9 +400,17 @@ public class Player : MonoBehaviour
     }
     public void ExitBoat(Vector3 exitPos,Quaternion exitRot, int exId = -1)
     {
+        if (boat.isHoldingOars)
+        {
+            LetGo();
+        }
         inBoat = false;
         body.parent = null;
         body.position = exitPos;
         body.rotation = exitRot;
+    }
+    public void EnterBoat()
+    {
+        inBoat = true;
     }
 }

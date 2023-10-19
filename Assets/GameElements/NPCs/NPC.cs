@@ -8,13 +8,14 @@ public class StageProperties
 {
     public Vector3 position;
     public  Quaternion rotation;
-    public int animData;
+    public int animRestStage;
     public Transform parent;
     public bool inBoat;
     public DialogueScriptableObject[] dialogueSOs;
 }
 public class NPC : MonoBehaviour
 {
+    public Animator anim;
     public Transform body;
     public Transform head;
     public Transform lookAtTrans;
@@ -52,6 +53,10 @@ public class NPC : MonoBehaviour
     public void OnNewStage()
     {
         dialogueInter.dialogueSOs = stages[stage].dialogueSOs;
+        anim.SetInteger("restType", stages[stage].animRestStage);
+        body.parent = stages[stage].parent;
+        body.localPosition = stages[stage].position;
+        body.localRotation = stages[stage].rotation;
     }
     void ManageHead()
     {

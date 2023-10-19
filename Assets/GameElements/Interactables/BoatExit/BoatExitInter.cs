@@ -6,9 +6,16 @@ public class BoatExitInter : Interactable
 {
     public int exitId;
     public Transform exitPos;
+    public Transform boatDockPos;
     public override void Interact(Player pl)
     {
         base.Interact(pl);
-        player.ExitBoat(exitPos.position, exitPos.rotation, exitId);
+        if (pl.inBoat)
+        {
+            player.ExitBoat(exitPos.position, exitPos.rotation, exitId);
+            player.boat.transform.position = boatDockPos.position;
+            player.boat.transform.rotation = boatDockPos.rotation;
+            player.boat.rb.velocity = Vector3.zero;
+        }
     }
 }

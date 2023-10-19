@@ -18,7 +18,7 @@ public class PlayerHand : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         if (heldInter != null && heldInter.grabbed)
         {

@@ -12,6 +12,10 @@ public class OarInteractable : Interactable
     public override void Grab()
     {
         base.Grab();
+        if (!player.inBoat)
+        {
+            player.EnterBoat();
+        }
         boat.GrabOars();
     }
     public override void LetGo()

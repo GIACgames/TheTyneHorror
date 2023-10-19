@@ -27,6 +27,7 @@ public class WaterManager : MonoBehaviour
 {
     public static WaterManager main;
     private MeshFilter meshFilter;
+    public Transform currentDirector;
     public float speed = 1f;
     public float offset = 0f;
     public Transform testObject;
@@ -68,7 +69,14 @@ public class WaterManager : MonoBehaviour
         waveLength = 4 + ((waveSteepness - 1) / waveSteepness);
         float wS = width / widthSegments;
         float lS = lengthh / lengthSegments;
-        transform.position = new Vector3(Mathf.Floor(testObject.position.x / wS) * wS, 0, Mathf.Floor(testObject.position.z / lS) * lS);
+        Vector3 cameraPos = Camera.main.transform.position;
+
+        //Vector3 localPos = currentDirector.InverseTransformPoint(transform.position);
+        //Vector3 localCamPos = currentDirector.InverseTransformPoint(cameraPos);
+        //localPos = new Vector3(Mathf.Floor(localCamPos.x / wS) * wS, 0, Mathf.Floor(localCamPos.z / lS) * lS);
+        //transform.position = currentDirector.TransformPoint(localPos);
+        //transform.rotation = currentDirector.rotation;
+        transform.position = new Vector3(Mathf.Floor(cameraPos.x / wS) * wS, 0, Mathf.Floor(cameraPos.z / lS) * lS);
         offset += Time.deltaTime * speed;
 
         WaveMesh();
