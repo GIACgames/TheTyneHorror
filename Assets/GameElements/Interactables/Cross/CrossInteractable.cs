@@ -11,6 +11,14 @@ public class CrossInteractable : Interactable
     public bool isPointing;
     bool lClick;
     bool rClick;
+    public Transform defCrossDrop;
+    public bool hasBeenPickedUp;
+    void Start()
+    {
+        if (!hasBeenPickedUp) {dropTrans = defCrossDrop;}
+        transform.parent = dropTrans;
+        
+    }
     void Update()
     {
         bool wasPointing = isPointing;
@@ -27,6 +35,23 @@ public class CrossInteractable : Interactable
                     //print("Burnt demon " + hit.collider.gameObject.name);
                 }
             }
+        }
+        if (hasBeenPickedUp)
+        {
+        if (GameManager.gM.player != null && GameManager.gM.player.inBoat)
+        {
+            dropTrans = GameManager.gM.player.boat.boatCrossDrop;
+        }
+        else
+        {
+            dropTrans = GameManager.gM.player.bodCrossDrop;
+        }
+        }
+        if (transform.parent != dropTrans){transform.parent = dropTrans;}
+        if (!pickedUp)
+        {
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
         }
     }
     void UpdatePlayerAnim()
@@ -56,6 +81,11 @@ public class CrossInteractable : Interactable
     public override void PickUp()
     {
         isPointing = false;
+        if (GameManager.gM.progMan.mainQLStage == 0)
+        {
+            GameManager.gM.progMan.mainQLStage = 1;
+        }
+        hasBeenPickedUp = true;
         UpdatePlayerAnim();
         base.PickUp();
         lClick = false;
