@@ -25,6 +25,7 @@ public class Boat : MonoBehaviour
     public float rowPushAnimVal = 1;
     Vector3 lastLanternPos;
     public bool lockedRot;
+    public float progSpeedMulti;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +43,7 @@ public class Boat : MonoBehaviour
         //transform.up = surfaceNormal;
         boatAnim.SetFloat("RowX", rowSpeed.x);
         boatAnim.SetFloat("RowY", rowSpeed.y);
+        boatAnim.SetFloat("animSpeed", progSpeedMulti);
         ManageLantern();
     }
     void ManageLantern()
@@ -69,7 +71,7 @@ public class Boat : MonoBehaviour
         {   
             float curSpeed = rb.velocity.magnitude;
             curRowVeloc = curSpeed;
-            float accel = rowAccel;
+            float accel = rowAccel * progSpeedMulti;
             if (curSpeed < maxRowVeloc)
             {
             }

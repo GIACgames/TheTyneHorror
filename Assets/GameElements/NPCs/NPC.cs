@@ -30,7 +30,7 @@ public class NPC : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (dialogueInter != null) {dialogueInter.npc = this;}
     }
 
     // Update is called once per frame
@@ -53,6 +53,7 @@ public class NPC : MonoBehaviour
     public void OnNewStage()
     {
         dialogueInter.dialogueSOs = stages[stage].dialogueSOs;
+        dialogueInter.dialogueSOIndex = 0;
         anim.SetInteger("restType", stages[stage].animRestStage);
         body.parent = stages[stage].parent;
         body.localPosition = stages[stage].position;

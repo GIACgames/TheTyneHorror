@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: John-0
   m_EditorClassIdentifier: 
   characterName: John
+  characterPitch: 1
+  characterVolume: 1
+  timeSinceLastSOtoShow: 1.5
   dialogueStrings:
   - Agh what are yer doing out this late! This is no time fer a leisure cruise.
   - These waters are dangerous yknow, an I don't just mean cause of the tide. There
@@ -21,3 +24,48 @@ MonoBehaviour:
   - Suppose yer wouldn't be much of a father if ya didn't at least look fer him though.
   - 'At least take me cross from me cabin on the dock, might serve ye some protection
     of sorts. I''ll move me boat outer yer way when yer back. '
+  dialogueParagraphs:
+  - dialogueString: Agh what are yer doing out this late! This is no time fer a leisure
+      cruise.
+    facePlayer: 1
+    timeToAutoSkip: 4
+    readSpeedMultiplier: 1
+    canSkip: 1
+    endLingerTime: 0
+    pitchAdjustment: 0
+    volumeMultiplier: 1
+  - dialogueString: These waters are dangerous yknow, an I don't just mean cause
+      of the tide. There be something lurking in the river Tyne.
+    facePlayer: 1
+    timeToAutoSkip: 4
+    readSpeedMultiplier: 1
+    canSkip: 1
+    endLingerTime: 0
+    pitchAdjustment: 0
+    volumeMultiplier: 1
+  - dialogueString: aye something ungodly. Yer kiddos as good as dead...
+    facePlayer: 0
+    timeToAutoSkip: 4
+    readSpeedMultiplier: 0.8
+    canSkip: 1
+    endLingerTime: 0
+    pitchAdjustment: -0.1
+    volumeMultiplier: 1
+  - dialogueString: Suppose yer wouldn't be much of a father if ya didn't at least
+      look fer him though.
+    facePlayer: 1
+    timeToAutoSkip: 4
+    readSpeedMultiplier: 1
+    canSkip: 1
+    endLingerTime: 0
+    pitchAdjustment: 0
+    volumeMultiplier: 1
+  - dialogueString: 'At least take me cross from me cabin on the dock, might serve
+      ye some protection of sorts. I''ll move me boat outer yer way when yer back. '
+    facePlayer: 1
+    timeToAutoSkip: 4
+    readSpeedMultiplier: 1
+    canSkip: 0
+    endLingerTime: 1
+    pitchAdjustment: 0
+    volumeMultiplier: 1

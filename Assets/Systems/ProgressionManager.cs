@@ -8,6 +8,7 @@ public class ProgressionManager : MonoBehaviour
     int lastMQLStage = -1;
     public NPC oDJohn;
     public BoatBlocker bb;
+    public Boat boat;
 
     // Start is called before the first frame update
     void Start()
@@ -32,11 +33,19 @@ public class ProgressionManager : MonoBehaviour
         {
             bb.isBlocking = true;
             oDJohn.stage = 0;
+            boat.progSpeedMulti = 0.7f;
         }
-        else if (mainQLStage == 1)
+        else if (mainQLStage == 1) //Alison Fallen Out Of boat
+        {
+            bb.isBlocking = true;
+            oDJohn.stage = 0;
+            boat.progSpeedMulti = 1f;
+        } 
+        else if (mainQLStage == 2) //PickedUpCross
         {
             bb.isBlocking = false;
             oDJohn.stage = 1;
+            boat.progSpeedMulti = 1f;
         }
     }
 }

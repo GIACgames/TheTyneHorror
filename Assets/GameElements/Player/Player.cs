@@ -182,7 +182,7 @@ public class Player : MonoBehaviour
     {
         if (grabbedObj != null)
         {
-            if ((Input.GetKeyDown("e") && selectedInteractable == null) || Input.GetKeyDown("q"))
+            if (( !GameManager.gM.dialogueHandler.dialogueInProgress && Input.GetKeyDown("e") && selectedInteractable == null) || Input.GetKeyDown("q"))
             {
             LetGo();}
             else
@@ -193,7 +193,7 @@ public class Player : MonoBehaviour
                     {
                         selectedInteractable.BeginUseItem(grabbedObj);
                     }
-                    else if (Input.GetKeyUp("e") || Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1))
+                    else if ((Input.GetKeyUp("e") || Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)))
                     {
                         selectedInteractable.StopUseItem(grabbedObj);
                     }

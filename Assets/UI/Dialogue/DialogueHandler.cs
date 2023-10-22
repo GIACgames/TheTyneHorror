@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class DialogueHandler : MonoBehaviour
 {
+    public bool dialogueInProgress;
     public static DialogueHandler DialogueHandlerInstance { get; private set; } // Singleton
 
     #region Dialogue Components
@@ -20,6 +21,10 @@ public class DialogueHandler : MonoBehaviour
 
     #region Dialogue Typing Effect
     public bool textTypingEffectFlag;
+    bool skipToEnd;
+    Coroutine currentDialogueIE;
+    DialogueParagraph curDialoguePara;
+    public float lastEndDialogue;
     #endregion
 
     private void Awake()
@@ -44,69 +49,95 @@ public class DialogueHandler : MonoBehaviour
         // Change the text being displayed
         characterNameObject.text = currentCharacterSpeaking;
         dialogueObject.text = currentDialogue;
+        if (dialogueInProgress && curDialoguePara.canSkip)
+        {
+            if (Input.GetKeyDown("e")) { skipToEnd = true;}
+        }
 
     }
-    public void StartDialogue(DialogueScriptableObject dialogueSO)
+    public void StartDialogue(DialogueScriptableObject dialogueSO , NPC npc = null)
     {
-        StartCoroutine(startDialogueEnum(dialogueSO));
+        if (dialogueInProgress)
+        {
+            
+        }
+        if (currentDialogueIE != null) {StopCoroutine(currentDialogueIE);}
+        currentDialogueIE = StartCoroutine(startDialogueEnum(dialogueSO, npc));
     }
-    public IEnumerator startDialogueEnum(DialogueScriptableObject dialogue)
+    public IEnumerator startDialogueEnum(DialogueScriptableObject dialogue, NPC npc = null)
         // Enum for displaying and cycling dialogue strings
     {
+        bool originallyFacingP = false;
+        if (npc != null) {originallyFacingP = npc.faceTarget;}
+        float curPitch = dialogue.characterPitch;
+        float curVolume = dialogue.characterVolume;
+        dialogueInProgress = true;
         dialgoueEnumFlag = true; // Ensures multiple Enums dont run simultaneously
         showDialogueCanvas();
         Debug.Log("Coroutine Begins");
-        Queue<string> dialogueStrings = new Queue<string>(); // Creates a queue to hold dialogue strings
-        dialogueStrings.Clear(); // Ensures queue is empty
-        string newDialogue;
+        Queue<DialogueParagraph> dialogueParas = new Queue<DialogueParagraph>(); // Creates a queue to hold dialogue strings
+        dialogueParas.Clear(); // Ensures queue is empty
+        //curDialoguePara = null;
         
         if (dialogue.dialogueStrings == null) // Check if there are no Dialogue strings
         {
-            Debug.Log("No Dialogue Strings");
+            //Debug.Log("No Dialogue Strings");
             yield return null;
         }
 
-        foreach (string dialogueString in dialogue.dialogueStrings) // Load every dialogue string in the array to the queue structure
+        foreach (DialogueParagraph dialoguePara in dialogue.dialogueParagraphs) // Load every dialogue string in the array to the queue structure
         {
-            dialogueStrings.Enqueue(dialogueString);
-            Debug.Log("Enqueued New Dialogue String");
+            dialogueParas.Enqueue(dialoguePara);
+            //Debug.Log("Enqueued New Dialogue String");
         }
 
         
         currentCharacterSpeaking = dialogue.characterName; // Changes the character name to who is currently speaking
-        newDialogue = dialogueStrings.Dequeue(); // Gets the new dialogue from the queue
+        //curDialoguePara = dialogueParas.Dequeue(); // Gets the new dialogue from the queue
         currentDialogue = ""; // Reset Current Dialogue string
-        for (int i = 0; i < newDialogue.Length; i++)
+        skipToEnd = false;
+        /*for (int i = 0; i < curDialoguePara.dialogueString.Length; i++)
         // Iterate through string and add each letter to the current dialogue after 0.1 seconds
         {
-            currentDialogue += newDialogue[i];
-            yield return new WaitForSeconds(0.1f);
+            currentDialogue += curDialoguePara.dialogueString[i];
+            if (!skipToEnd) {yield return new WaitForSeconds(0.05f / curDialoguePara.readSpeedMultiplier);}
         }
+        yield return new WaitForSeconds(curDialoguePara.endLingerTime);
+        skipToEnd = false;*/
 
         bool exitloop = false; // While loop exit bool 
+        float lastCharTime = Time.time;
+        bool firstPara = true;
         while (!exitloop) // For cycling through dialogue strings when Space is pressed
         {
        
-            if(dialogueStrings.Count == 0 && Input.GetKeyDown("space"))
+            if(dialogueParas.Count == 0 && (Input.GetKeyDown("e") || (Time.time - lastCharTime > curDialoguePara.timeToAutoSkip)))
             {
                 exitloop = true;
             }
-
-            if (Input.GetKeyDown("space"))
+            if ((Input.GetKeyDown("e") || firstPara) || (Time.time - lastCharTime > curDialoguePara.timeToAutoSkip))
             {
-                if (dialogueStrings.Count >= 1) 
+                firstPara = false;
+                skipToEnd = false;
+                if (dialogueParas.Count >= 1) 
                 { 
-                    newDialogue = dialogueStrings.Dequeue(); // Gets the new dialogue from the queue
+                    curDialoguePara = dialogueParas.Dequeue(); // Gets the new dialogue from the queue
+                    if (npc != null) {npc.faceTarget = curDialoguePara.facePlayer;}
+                    curPitch = curDialoguePara.pitchAdjustment + dialogue.characterPitch;
+                    curVolume = dialogue.characterVolume + curDialoguePara.volumeMultiplier;
                     currentDialogue = ""; // Reset Current Dialogue string
-                    for (int i = 0; i < newDialogue.Length; i++)
+                    for (int i = 0; i < curDialoguePara.dialogueString.Length; i++)
                     // Iterate through string and add each letter to the current dialogue after 0.1 seconds
                     {
-                        currentDialogue += newDialogue[i];
-                        yield return new WaitForSeconds(0.1f);
+                        currentDialogue += curDialoguePara.dialogueString[i];
+                        if (!skipToEnd) {yield return new WaitForSeconds(0.05f / curDialoguePara.readSpeedMultiplier);}
+                        lastCharTime = Time.time;
                     }
+                    yield return new WaitForSeconds(curDialoguePara.endLingerTime);
                 }
                 else
                 {
+                    lastCharTime = Time.time;
                     exitloop = true;
                 }
             }
@@ -114,7 +145,7 @@ public class DialogueHandler : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log("OUT OF STRINGS");
+        //Debug.Log("OUT OF STRINGS");
 
 
         // Reset vars and end Enum
@@ -122,6 +153,10 @@ public class DialogueHandler : MonoBehaviour
         hideDialogueCanvas();
         dialgoueEnumFlag = false;
         yield return null;
+        dialogueInProgress = false;
+        currentDialogueIE = null;
+        lastEndDialogue = Time.time;
+        if (npc != null) {npc.faceTarget = originallyFacingP;}
     }
 
 
