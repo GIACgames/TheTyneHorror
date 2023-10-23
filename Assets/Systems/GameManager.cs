@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public Player player;
     public DialogueHandler dialogueHandler;
     public ProgressionManager progMan;
+    public SFXManager sfxManager;
     // Start is called before the first frame update
     void Awake()
     {

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: John-0
   m_EditorClassIdentifier: 
   characterName: John
-  characterPitch: 1
-  characterVolume: 1
+  characterPitch: 0.8
+  characterVolume: 0.5
   timeSinceLastSOtoShow: 1.5
   dialogueStrings:
   - Agh what are yer doing out this late! This is no time fer a leisure cruise.

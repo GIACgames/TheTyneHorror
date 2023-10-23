@@ -14,6 +14,7 @@ public class DialogueHandler : MonoBehaviour
     #region Dialogue Components
     public TextMeshProUGUI characterNameObject;
     public TextMeshProUGUI dialogueObject;
+    public AudioSource[] speechAudioSrcs;
     public bool dialgoueEnumFlag;
     public string currentCharacterSpeaking;
     public string currentDialogue;
@@ -26,9 +27,12 @@ public class DialogueHandler : MonoBehaviour
     DialogueParagraph curDialoguePara;
     public float lastEndDialogue;
     #endregion
+    int curSpchASIndex;
+    float[] aSTrackers;
 
     private void Awake()
     {
+        aSTrackers = new float[speechAudioSrcs.Length];
         #region Singleton Setup
         // Delete this if dialogue handler instance already exists
 
@@ -54,7 +58,35 @@ public class DialogueHandler : MonoBehaviour
             if (Input.GetKeyDown("e")) { skipToEnd = true;}
         }
 
+        for (int a = 0; a < aSTrackers.Length; a++)
+        {
+            if (speechAudioSrcs[a].isPlaying && Time.time - aSTrackers[a] > 0.6f)
+            {
+                speechAudioSrcs[a].Stop();
+            }
+        }
+
     }
+
+    void SayLetter(char c, float pitch, float volume)
+    {
+      //aS.Stop();
+      //print(c);
+      c = Char.ToUpper(c);
+      int asciiVal = System.Convert.ToInt32(c);
+      if (asciiVal >= 65 && asciiVal <= 91)
+      {
+        if (speechAudioSrcs[curSpchASIndex].isPlaying) {speechAudioSrcs[curSpchASIndex].Stop();}
+        speechAudioSrcs[curSpchASIndex].pitch = pitch;
+        speechAudioSrcs[curSpchASIndex].time = asciiVal - 65;
+        speechAudioSrcs[curSpchASIndex].Play();
+        aSTrackers[curSpchASIndex] = Time.time;
+        curSpchASIndex = (curSpchASIndex + 1) % speechAudioSrcs.Length;
+        //StartCoroutine(StopLetterSpeak());
+      }
+        
+    }
+
     public void StartDialogue(DialogueScriptableObject dialogueSO , NPC npc = null)
     {
         if (dialogueInProgress)
@@ -130,6 +162,7 @@ public class DialogueHandler : MonoBehaviour
                     // Iterate through string and add each letter to the current dialogue after 0.1 seconds
                     {
                         currentDialogue += curDialoguePara.dialogueString[i];
+                        SayLetter(curDialoguePara.dialogueString[i], curPitch, curVolume);
                         if (!skipToEnd) {yield return new WaitForSeconds(0.05f / curDialoguePara.readSpeedMultiplier);}
                         lastCharTime = Time.time;
                     }

@@ -7,6 +7,9 @@ public class Boat : MonoBehaviour
     public Rigidbody rb;
     public Player player;
     public Animator boatAnim;
+    public AudioSource boatMoveAS;
+    public AudioSource waterIdleAS;
+    public float maxMoveSpeedForMaxVol = 10;
     public Transform lanternHolder;
     public Transform boatCrossDrop;
     public LanternInteractable lanternInter;
@@ -26,6 +29,8 @@ public class Boat : MonoBehaviour
     Vector3 lastLanternPos;
     public bool lockedRot;
     public float progSpeedMulti;
+    public bool animRowStart;
+    bool wasAnimRowStart;
     // Start is called before the first frame update
     void Start()
     {
@@ -44,6 +49,8 @@ public class Boat : MonoBehaviour
         boatAnim.SetFloat("RowX", rowSpeed.x);
         boatAnim.SetFloat("RowY", rowSpeed.y);
         boatAnim.SetFloat("animSpeed", progSpeedMulti);
+        boatMoveAS.volume = Mathf.Clamp(rb.velocity.magnitude / maxMoveSpeedForMaxVol, 0, 1) * 0.5f * GameManager.gM.sfxManager.waterVolumeMulti;
+        waterIdleAS.volume = GameManager.gM.sfxManager.waterVolumeMulti * 1f;
         ManageLantern();
     }
     void ManageLantern()
@@ -88,6 +95,15 @@ public class Boat : MonoBehaviour
         }
         if (!lockedRot) {transform.Rotate(transform.up, curTurnVeloc * Time.deltaTime * Mathf.Abs(moveInput.x) * (1f + (rowPushAnimVal / 3)));}
         rowSpeed = Vector2.Lerp(rowSpeed, newRowSpeed, 0.01f);
+
+        if (animRowStart != wasAnimRowStart && moveInput != Vector2.zero)
+        {
+            if (animRowStart)
+            {
+                GameManager.gM.sfxManager.PlaySoundAtPoint("Water", "Row", transform.position, GameManager.gM.sfxManager.waterVolumeMulti, 10, false);
+            }
+            wasAnimRowStart = animRowStart;
+        }
     }
     public void GrabOars()
     {

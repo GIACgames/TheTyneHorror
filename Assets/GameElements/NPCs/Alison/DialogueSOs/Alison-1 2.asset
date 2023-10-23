@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Alison
   characterPitch: 1.3
-  characterVolume: 1
+  characterVolume: 0.1
   timeSinceLastSOtoShow: 3
   dialogueStrings:
   - I wish things were always this simple...
