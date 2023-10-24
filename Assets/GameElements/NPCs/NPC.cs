@@ -26,6 +26,7 @@ public class NPC : MonoBehaviour
     public int stage = 1;
     public StageProperties[] stages;
     int lastStage = -1;
+    public int exitId = -1;
 
     // Start is called before the first frame update
     void Start()
@@ -55,9 +56,12 @@ public class NPC : MonoBehaviour
         dialogueInter.dialogueSOs = stages[stage].dialogueSOs;
         dialogueInter.dialogueSOIndex = 0;
         anim.SetInteger("restType", stages[stage].animRestStage);
-        body.parent = stages[stage].parent;
-        body.localPosition = stages[stage].position;
-        body.localRotation = stages[stage].rotation;
+        if (stages[stage].parent != null)
+        {
+            body.parent = stages[stage].parent;
+            body.localPosition = stages[stage].position;
+            body.localRotation = stages[stage].rotation;
+        }
     }
     void ManageHead()
     {

@@ -14,6 +14,7 @@ public class Boat : MonoBehaviour
     public Transform boatCrossDrop;
     public LanternInteractable lanternInter;
     public Transform playerHolder;
+    public Transform[] npcHolders;
     public bool playerInBoat = true;
     public bool isHoldingOars;
     public float maxRowVeloc;
@@ -31,6 +32,7 @@ public class Boat : MonoBehaviour
     public float progSpeedMulti;
     public bool animRowStart;
     bool wasAnimRowStart;
+    bool isFastRowing;
     // Start is called before the first frame update
     void Start()
     {
@@ -48,10 +50,26 @@ public class Boat : MonoBehaviour
         //transform.up = surfaceNormal;
         boatAnim.SetFloat("RowX", rowSpeed.x);
         boatAnim.SetFloat("RowY", rowSpeed.y);
-        boatAnim.SetFloat("animSpeed", progSpeedMulti);
+        boatAnim.SetFloat("animSpeed", progSpeedMulti * (1.5f * (isFastRowing ? 1.3f: 1)));
         boatMoveAS.volume = Mathf.Clamp(rb.velocity.magnitude / maxMoveSpeedForMaxVol, 0, 1) * 0.5f * GameManager.gM.sfxManager.waterVolumeMulti;
         waterIdleAS.volume = GameManager.gM.sfxManager.waterVolumeMulti * 1f;
         ManageLantern();
+    }
+    void NPCEnter(NPC npc)
+    {
+        Transform freeSpace = null;
+        int i = 0;
+        while (freeSpace == null && i < npcHolders.Length)
+        {
+            if (npcHolders[i].childCount == 0)
+            {
+                freeSpace = npcHolders[i];
+            }
+        }
+        npc.transform.parent = freeSpace;
+        npc.transform.localPosition = Vector3.zero;
+        npc.transform.localRotation = Quaternion.identity;
+        
     }
     void ManageLantern()
     {
@@ -66,10 +84,12 @@ public class Boat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        isFastRowing = false;
         Vector2 moveInput = Vector2.zero;
         if (isHoldingOars)
         {
-            if (playerInBoat) {moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));}
+            if (playerInBoat) {moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            if (Input.GetKey(KeyCode.LeftShift) && GameManager.gM.progMan.mainQLStage > 0) {isFastRowing = true;}}
         }
         Vector2 newRowSpeed = Vector2.zero;
         newRowSpeed.y += moveInput.y;
@@ -78,11 +98,11 @@ public class Boat : MonoBehaviour
         {   
             float curSpeed = rb.velocity.magnitude;
             curRowVeloc = curSpeed;
-            float accel = rowAccel * progSpeedMulti;
+            float accel = rowAccel * progSpeedMulti  * (isFastRowing ? 1.3f: 1);
             if (curSpeed < maxRowVeloc)
             {
             }
-            rb.velocity = Vector3.MoveTowards(rb.velocity,transform.forward * moveInput.y * (newRowSpeed.y > 0 ? maxRowVeloc: maxRowVeloc * 0.75f),accel * Time.deltaTime * (newRowSpeed.y != 0 ? rowPushAnimVal: 0.1f));
+            rb.velocity = Vector3.MoveTowards(rb.velocity,transform.forward  * (isFastRowing ? 1.3f: 1) * moveInput.y * (newRowSpeed.y > 0 ? maxRowVeloc: maxRowVeloc * 0.75f),accel * Time.deltaTime * (newRowSpeed.y != 0 ? rowPushAnimVal: 0.1f));
             //rb.velocity += rowPushAnimVal * transform.forward * 0.02f;
         }
 
@@ -100,7 +120,9 @@ public class Boat : MonoBehaviour
         {
             if (animRowStart)
             {
-                GameManager.gM.sfxManager.PlaySoundAtPoint("Water", "Row", transform.position, GameManager.gM.sfxManager.waterVolumeMulti, 10, false);
+                AudioSource rowSound = GameManager.gM.sfxManager.PlaySoundAtPoint("Water", "Row", transform.position, GameManager.gM.sfxManager.waterVolumeMulti, 10, false).source;
+                rowSound.pitch = (isFastRowing ? 0.9f : 1);
+                rowSound.volume = (isFastRowing ? 4f : 1);
             }
             wasAnimRowStart = animRowStart;
         }

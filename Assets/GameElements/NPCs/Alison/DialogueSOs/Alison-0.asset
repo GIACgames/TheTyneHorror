@@ -40,7 +40,7 @@ MonoBehaviour:
     endLingerTime: 0
     pitchAdjustment: 0
     volumeMultiplier: 1
-  - dialogueString: 'Just another few minutes and then we go home I swear. Pleeeease.. '
+  - dialogueString: 'Just another few minutes before we go home I swear. Pleeeease.. '
     facePlayer: 1
     timeToAutoSkip: 3
     readSpeedMultiplier: 1

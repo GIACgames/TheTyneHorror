@@ -9,6 +9,7 @@ public class TransitionBehaviour : MonoBehaviour // Attach to the parent of a tr
     public float fadeSpeed; // Speed of the fade - set in the Inspector
     public bool fadeEnumFlag; // Mark when enumerator running
     public bool fullyFaded; // True when fully faded in
+    Coroutine fadeCor;
 
 
     public bool testTrigger; // Testing
@@ -16,9 +17,11 @@ public class TransitionBehaviour : MonoBehaviour // Attach to the parent of a tr
     // Start is called before the first frame update
     void Start()
     {
-        fadeObjectImage.gameObject.SetActive(false);
+        fadeObjectImage.gameObject.SetActive(true);
         fadeEnumFlag = false; // Reset enum flag
-        fadeObjectImage.color = new Color(fadeObjectImage.color.r, fadeObjectImage.color.g, fadeObjectImage.color.b, 0f); // Set opacity to 0
+        fadeObjectImage.color = new Color(fadeObjectImage.color.r, fadeObjectImage.color.g, fadeObjectImage.color.b, 1f); // Set opacity to 0
+        fullyFaded = true;
+        StartCoroutine(FadeToClear(1));
 
     }
 
@@ -37,6 +40,12 @@ public class TransitionBehaviour : MonoBehaviour // Attach to the parent of a tr
         #endregion
 
 
+    }
+    public void FadeTransition(float interval)
+    {
+        fullyFaded = false;
+        if (fadeCor != null) {StopCoroutine(fadeCor);}
+        fadeCor = StartCoroutine(fadeEnum(interval));
     }
 
     public IEnumerator fadeEnum(float interval)
@@ -77,6 +86,25 @@ public class TransitionBehaviour : MonoBehaviour // Attach to the parent of a tr
         fadeEnumFlag = false;
         fadeObjectImage.gameObject.SetActive(false);
         yield return null;
+        fadeCor = null;
+    }
+    public IEnumerator FadeToClear(float interval)
+    {
+        yield return new WaitForSeconds(interval);
+        fullyFaded = false;
+        // Fade out
+        while (fadeObjectImage.color.a >= 0.01f)
+        {
+            fadeObjectImage.color = new Color(fadeObjectImage.color.r, fadeObjectImage.color.g, fadeObjectImage.color.b, Mathf.Lerp(fadeObjectImage.color.a, 0f, fadeSpeed * Time.deltaTime));
+            yield return null;
+        }
+
+
+        // End
+        fadeEnumFlag = false;
+        fadeObjectImage.gameObject.SetActive(false);
+        yield return null;
+        fadeCor = null;
     }
 
 }

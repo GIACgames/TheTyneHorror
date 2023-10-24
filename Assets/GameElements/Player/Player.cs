@@ -182,14 +182,14 @@ public class Player : MonoBehaviour
     {
         if (grabbedObj != null)
         {
-            if (( !GameManager.gM.dialogueHandler.dialogueInProgress && Input.GetKeyDown("e") && selectedInteractable == null) || Input.GetKeyDown("q"))
+            if (((!GameManager.gM.dialogueHandler.dialogueInProgress && Input.GetKeyDown("e") && selectedInteractable == null) || Input.GetKeyDown("q")) && !GameManager.gM.transitionManager.fadeEnumFlag)
             {
             LetGo();}
             else
             {
                 if (selectedInteractable != null)
                 {
-                    if (Input.GetKeyDown("e") || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+                    if (!GameManager.gM.transitionManager.fadeEnumFlag && Input.GetKeyDown("e") || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
                     {
                         selectedInteractable.BeginUseItem(grabbedObj);
                     }
@@ -219,7 +219,7 @@ public class Player : MonoBehaviour
         }
         if (selectedInteractable != null)
         {
-            if (Input.GetKeyDown("e"))
+            if (Input.GetKeyDown("e") && !GameManager.gM.transitionManager.fadeEnumFlag)
             {
                 AttemptInter(selectedInteractable);
             }
@@ -398,19 +398,43 @@ public class Player : MonoBehaviour
     {
 
     }
-    public void ExitBoat(Vector3 exitPos,Quaternion exitRot, int exId = -1)
+    public void ExitBoat(Vector3 exitPos,Quaternion exitRot, Transform dockPos = null, int exId = -1)
     {
         if (boat.isHoldingOars)
         {
             LetGo();
         }
+        StartCoroutine(ExitBoatIE(exitPos,exitRot,dockPos,exId));
+    }
+    IEnumerator ExitBoatIE(Vector3 exitPos,Quaternion exitRot, Transform dockPos = null, int exId = -1)
+    {
+        GameManager.gM.transitionManager.FadeTransition(0.3f);
+        while (!GameManager.gM.transitionManager.fullyFaded)
+        {
+            yield return null;
+        }
         inBoat = false;
         body.parent = null;
         body.position = exitPos;
         body.rotation = exitRot;
+        if (dockPos != null)
+        {
+            boat.transform.position = dockPos.position;
+            boat.transform.rotation = dockPos.rotation;
+            boat.rb.velocity = Vector3.zero;
+        }
     }
     public void EnterBoat()
     {
+        StartCoroutine(EnterBoatIE());
+    }
+    public IEnumerator EnterBoatIE()
+    {
+        GameManager.gM.transitionManager.FadeTransition(0.3f);
+        while (!GameManager.gM.transitionManager.fullyFaded)
+        {
+            yield return null;
+        }
         inBoat = true;
     }
 }

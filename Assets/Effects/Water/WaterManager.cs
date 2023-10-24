@@ -164,6 +164,18 @@ public class WaterManager : MonoBehaviour
         d = new Vector3(d.x, d.z, -d.y);
         return  new Vector3(c.x, (c.y + d.y) / 2, d.z);
     }
+    public Vector3 GetWaveNormalMP(Transform[] poses)
+    {
+        Vector3 a = new Vector3(poses[0].position.x, GetWaveHeight(poses[0].position), poses[0].position.z);
+        Vector3 b = new Vector3(poses[1].position.x, GetWaveHeight(poses[1].position), poses[1].position.x);
+        Vector3 c = b - a;
+        c = new Vector3(-c.y, c.x, c.z);
+        a = new Vector3(poses[2].position.x, GetWaveHeight(poses[2].position), poses[2].position.z);
+        b = new Vector3(poses[3].position.x, GetWaveHeight(poses[3].position), poses[3].position.x);
+        Vector3 d = b - a;
+        d = new Vector3(d.x, d.z, -d.y);
+        return  new Vector3(c.x, (c.y + d.y) / 2, d.z);
+    }
     public float GetWaveHeight(Vector3 pos)
     {
         /*float wave1 = amplitude * Mathf.Sin(pos.x / length + offset);

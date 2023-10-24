@@ -15,6 +15,7 @@ public class DialogueHandler : MonoBehaviour
     public TextMeshProUGUI characterNameObject;
     public TextMeshProUGUI dialogueObject;
     public AudioSource[] speechAudioSrcs;
+    public float speechVolume = 0.4f;
     public bool dialgoueEnumFlag;
     public string currentCharacterSpeaking;
     public string currentDialogue;
@@ -78,6 +79,7 @@ public class DialogueHandler : MonoBehaviour
       {
         if (speechAudioSrcs[curSpchASIndex].isPlaying) {speechAudioSrcs[curSpchASIndex].Stop();}
         speechAudioSrcs[curSpchASIndex].pitch = pitch;
+        speechAudioSrcs[curSpchASIndex].volume = speechVolume * volume;
         speechAudioSrcs[curSpchASIndex].time = asciiVal - 65;
         speechAudioSrcs[curSpchASIndex].Play();
         aSTrackers[curSpchASIndex] = Time.time;

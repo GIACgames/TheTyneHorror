@@ -82,7 +82,7 @@ public class SFXManager : MonoBehaviour
         {
             foreach (Sound s in sounds)
             {
-                if (!s.active || ((snd == null || snd.priority > s.priority) && priority >= s.priority))
+                if (!s.active || ((snd != null && snd.priority > s.priority) && priority >= s.priority))
                 {
                     snd = s;
                 }
