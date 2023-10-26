@@ -182,7 +182,7 @@ public class Player : MonoBehaviour
     {
         if (grabbedObj != null)
         {
-            if (((!GameManager.gM.dialogueHandler.dialogueInProgress && Input.GetKeyDown("e") && selectedInteractable == null) || Input.GetKeyDown("q")) && !GameManager.gM.transitionManager.fadeEnumFlag)
+            if (((Input.GetKeyDown("e") && selectedInteractable == null) || Input.GetKeyDown("q")) && !GameManager.gM.transitionManager.fadeEnumFlag)
             {
             LetGo();}
             else
@@ -219,7 +219,7 @@ public class Player : MonoBehaviour
         }
         if (selectedInteractable != null)
         {
-            if (Input.GetKeyDown("e") && !GameManager.gM.transitionManager.fadeEnumFlag)
+            if ((Input.GetKeyDown("e") || (selectedInteractable.interId == 8 && Input.GetKeyDown("space"))) && !GameManager.gM.transitionManager.fadeEnumFlag)
             {
                 AttemptInter(selectedInteractable);
             }

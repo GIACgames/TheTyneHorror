@@ -15,7 +15,7 @@ MonoBehaviour:
   characterName: Alison
   characterPitch: 1.3
   characterVolume: 0.1
-  timeSinceLastSOtoShow: 3
+  timeSinceLastSOtoShow: 2
   dialogueStrings:
   - You must get lonely too, being you and all. It's why I dont have a new mummy
     isn't it.

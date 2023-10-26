@@ -16,6 +16,7 @@ public class LanternInteractable : Interactable
     public bool dangerDarkMode;
     float lastOilBegin;
     float lastLightTime;
+    public bool showLight;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,19 +27,27 @@ public class LanternInteractable : Interactable
     void Update()
     {
         //selectable = level < capacity - 20;
-        if (oilCanRefiller == null || (Time.time - lastOilBegin > 0.35f && (!oilCanRefiller.grabbed && oilCanRefiller.level <= 0 || level > capacity - 5)))
+        if (oilCanRefiller == null || oilCanRefiller.level <= 0 || (Time.time - lastOilBegin > 0.35f && (!oilCanRefiller.grabbed && oilCanRefiller.level <= 0 || level > capacity - 5)))
         {
             if (oilCanRefiller != null){oilCanRefiller.player.itemEventTarget = null;
             oilCanRefiller = null;}
-            level = Mathf.Clamp(level - (drainSpeed * Time.deltaTime), 0, capacity);
+            if (GameManager.gM.progMan.mainQLStage > 0 && GameManager.gM.player.inBoat) {level = Mathf.Clamp(level - (drainSpeed * Time.deltaTime), 0, capacity);}
         }
         else
         {
             level = Mathf.Clamp(level + (refillSpeed * Time.deltaTime), 0, capacity);
-            //oilCanRefiller.level -= (refillSpeed * Time.deltaTime);
+            if (level < capacity) {oilCanRefiller.level -= (refillSpeed * Time.deltaTime);}
         }
-        lightSource.intensity = minimumLightIntensity + (1 * (level / capacity));
+        
         renderer.sharedMaterial.SetFloat("_Intensity", 0f + (1 * (level / capacity)));
+        if (showLight)
+        {
+            lightSource.intensity = Mathf.Lerp(lightSource.intensity,minimumLightIntensity + (1 * (level / capacity)), 1 * Time.deltaTime);
+        }
+        else
+        {
+            lightSource.intensity = Mathf.Lerp(lightSource.intensity,0, 1 * Time.deltaTime);
+        }
         if (level > 5)
         {
             lastLightTime = Time.time;

@@ -15,6 +15,8 @@ public class FloatingObject : MonoBehaviour
     bool wasInWater;
     float origDrag;
     float origAngDrag;
+    public Vector3 targetPos;
+    public float targetSpeed;
 
     void Start()
     {
@@ -56,6 +58,11 @@ public class FloatingObject : MonoBehaviour
                     if (rb != null) {transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.FromToRotation(transform.up, surfaceNormal) * transform.rotation, reorientSpeed * Time.deltaTime);}
                     else {transform.rotation = Quaternion.FromToRotation(transform.up, surfaceNormal) * transform.rotation;}
                 }
+            }
+
+            if (targetSpeed != 0)
+            {
+                rb.velocity += (targetPos - transform.position).normalized * targetSpeed;
             }
         }
         else

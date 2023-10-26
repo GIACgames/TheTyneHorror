@@ -31,7 +31,7 @@ public class ChildFallOutOfBoatSE : ScriptedEvent
         if (stage == 0)
         {
             alison.stage = 0;
-            if (GameManager.gM.player.transform.position.x < 1480)
+            if (GameManager.gM.player.transform.position.x < 1505)
             {
                 GameManager.gM.dialogueHandler.StartDialogue(stageSOs[0]);
                 stage = 1;
@@ -41,7 +41,7 @@ public class ChildFallOutOfBoatSE : ScriptedEvent
         {
             if (!hasFallen) {alison.stage = 1;}
             
-            if (!hasFallen && GameManager.gM.player.transform.position.x < 1400)
+            if (!hasFallen && GameManager.gM.player.transform.position.x < 1470)
             {
                 StartCoroutine(ChildFallOutOfBoatIE());
                 hasFallen = true;

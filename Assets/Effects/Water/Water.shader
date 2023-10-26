@@ -54,10 +54,11 @@ Shader "Custom/Water" {
             //f.x = (f.x + IN.worldPos.z) % 1;// f.y = (f.y + IN.worldPos.z) % 1;
 
             float offsetInput = (_Time.y + frac(f.x)) * _WobblesPerSecond * TWO_PI + f.x / _WobblePeriod;
-            f.y += sin(offsetInput) * _WobbleAmplitude * 2;
-            f.x += cos(offsetInput) * _WobbleAmplitude * 2;
+            //f.y += sin(offsetInput) * _WobbleAmplitude * 2;
+            //f.x += cos(offsetInput) * _WobbleAmplitude * 2;
             //f.x = f.x % 1; f.y = f.y % 1;
             o.Albedo = tex2D(_MainTex, f).rgb;
+            
 
 
             f.y += sin(offsetInput) * _WobbleAmplitude;
@@ -68,10 +69,12 @@ Shader "Custom/Water" {
             if (scum.a > (1 - _FrothIntensity) + (0.1 * (1 + (sin(_Time.y * _WobblesPerSecond * 5 * (_FrothIntensity * _FrothIntensity)))))) {o.Albedo += scum * scum.a * 0.8;o.Normal = 5 * scum.a;}
             else {o.Albedo += scum * scum.a * 0.3; }
 
-            f.x = (f.x + (0.03 * sin(_Time.y * 1))) % 1; f.y = (f.y + (0.02 * sin(_Time.y * 2))) % 1;
-            o.Normal = UnpackNormal(tex2D(_BumpMap, f));
+           //f.x = (f.x + (0.03 * sin(_Time.y * 1))) % 1; f.y = (f.y + (0.02 * sin(_Time.y * 2))) % 1;
+            //o.Normal = UnpackNormal(tex2D(_BumpMap, f));
 
             // Normal mapping
+            f.x = (f.x + (_Time * _WaveSpeed * 2)) % 1;
+            o.Normal = UnpackNormal(tex2D(_BumpMap, f));
             //o.Normal = UnpackNormal(tex2D(_BumpMap, f));
            if (depth > 0.3) {//o.Albedo += depth; 
                 o.Normal += ((depth - 0.3) * 0.5);

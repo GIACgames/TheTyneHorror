@@ -81,9 +81,9 @@ public class CrossInteractable : Interactable
     public override void PickUp()
     {
         isPointing = false;
-        if (GameManager.gM.progMan.mainQLStage < 2)
+        if (GameManager.gM.progMan.mainQLStage < 3)
         {
-            GameManager.gM.progMan.mainQLStage = 2;
+            GameManager.gM.progMan.mainQLStage = 3;
         }
         hasBeenPickedUp = true;
         UpdatePlayerAnim();

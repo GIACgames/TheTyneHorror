@@ -15,6 +15,8 @@ public class Boat : MonoBehaviour
     public LanternInteractable lanternInter;
     public Transform playerHolder;
     public Transform[] npcHolders;
+    public OilInteractable[] oilCanisters;
+    public Transform[] oilCanHolders;
     public bool playerInBoat = true;
     public bool isHoldingOars;
     public float maxRowVeloc;
@@ -36,6 +38,7 @@ public class Boat : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        oilCanisters = new OilInteractable[oilCanHolders.Length];
         lastLanternPos = lanternHolder.position;
     }
     
@@ -135,5 +138,50 @@ public class Boat : MonoBehaviour
     public void ReleaseOars()
     {
         isHoldingOars = false;
+    }
+    public void AddOilCan(OilInteractable oI)
+    {
+        bool freeSpace = false;
+        int bestSpace = -1;
+        oI.addedToBoat = true;
+        for(int i = 0; i < oilCanisters.Length; i++)
+        {
+            if (!freeSpace)
+            {
+                if (oilCanisters[i] == null) {freeSpace = true; bestSpace = i;}
+                else if (bestSpace == -1) {if (oI.level > oilCanisters[i].level){bestSpace = i;}}
+                else {if (oilCanisters[bestSpace].level > oilCanisters[i].level){bestSpace = i;}}
+            }
+        }
+        if (bestSpace != -1)
+        {
+            if (!freeSpace)
+            {
+                Destroy(oilCanisters[bestSpace]);
+            }
+            oilCanisters[bestSpace] = oI;
+            oilCanisters[bestSpace].transform.parent = oilCanHolders[bestSpace];
+            oilCanisters[bestSpace].dropTrans = oilCanHolders[bestSpace];
+            oilCanisters[bestSpace].transform.localPosition = Vector3.zero;
+            oilCanisters[bestSpace].transform.localRotation = Quaternion.identity;
+
+        }
+        else
+        {
+            Destroy(oI.gameObject);
+        }
+
+    }
+    public void TakeOilCan(OilInteractable oI)
+    {
+        int oilIndex = -1;
+        for(int i = 0; i < oilCanisters.Length; i++)
+        {
+            if (oilCanisters[i] == oI){oilIndex = i;}
+        }
+        if (oilIndex != -1)
+        {
+            oilCanisters[oilIndex] = null;
+        }
     }
 }

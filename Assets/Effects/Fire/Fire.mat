@@ -69,12 +69,12 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Intensity: 0.0019969014
+    - _Intensity: 0.00074149214
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Scale: 15
+    - _Scale: 2
     - _ScrollSpeed: 3
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

@@ -15,9 +15,9 @@ public class HintManager : MonoBehaviour
     IEnumerator Start()
     {
         yield return new WaitForSeconds(4);
-        ShowHint("[E] TO INTERACT", 10);
-        yield return new WaitForSeconds(12);
-        ShowHint("[WASD] TO MOVE WHILE ROWING", 10);
+       // ShowHint("[E] TO INTERACT", 10);
+       // yield return new WaitForSeconds(12);
+       // ShowHint("[WASD] TO MOVE WHILE ROWING", 10);
 
     }
     void Update()

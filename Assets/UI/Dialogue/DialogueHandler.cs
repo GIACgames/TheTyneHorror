@@ -56,7 +56,7 @@ public class DialogueHandler : MonoBehaviour
         dialogueObject.text = currentDialogue;
         if (dialogueInProgress && curDialoguePara.canSkip)
         {
-            if (Input.GetKeyDown("e")) { skipToEnd = true;}
+            if (Input.GetKeyDown("space")) { skipToEnd = true;}
         }
 
         for (int a = 0; a < aSTrackers.Length; a++)
@@ -145,11 +145,11 @@ public class DialogueHandler : MonoBehaviour
         while (!exitloop) // For cycling through dialogue strings when Space is pressed
         {
        
-            if(dialogueParas.Count == 0 && (Input.GetKeyDown("e") || (Time.time - lastCharTime > curDialoguePara.timeToAutoSkip)))
+            if(dialogueParas.Count == 0 && (Input.GetKeyDown("space") || (Time.time - lastCharTime > curDialoguePara.timeToAutoSkip)))
             {
                 exitloop = true;
             }
-            if ((Input.GetKeyDown("e") || firstPara) || (Time.time - lastCharTime > curDialoguePara.timeToAutoSkip))
+            if ((Input.GetKeyDown("space") || firstPara) || (Time.time - lastCharTime > curDialoguePara.timeToAutoSkip))
             {
                 firstPara = false;
                 skipToEnd = false;
