@@ -38,8 +38,8 @@ public class FloatingObjectSpawner : MonoBehaviour
                 if (curOilCan.transform.position.x > GameManager.gM.player.transform.position.x + 15) {Destroy(curOilCan);}
                 else if (curOilCan.transform.position.x < GameManager.gM.player.transform.position.x)
                 {
-                    curOilCan.GetComponent<FloatingObject>().targetPos = new Vector3(curOilCan.transform.position.x, curOilCan.transform.position.y, GameManager.gM.player.transform.position.z);
-                    curOilCan.GetComponent<FloatingObject>().targetSpeed = 0.001f;
+                    curOilCan.GetComponent<FloatingObject>().targetPos = GameManager.gM.player.transform.position;//new Vector3(curOilCan.transform.position.x, curOilCan.transform.position.y, GameManager.gM.player.transform.position.z);
+                    curOilCan.GetComponent<FloatingObject>().targetSpeed = 0.003f;
                 }
                 else
                 {

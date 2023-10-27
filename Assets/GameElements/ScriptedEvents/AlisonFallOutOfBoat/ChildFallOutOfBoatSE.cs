@@ -13,6 +13,9 @@ public class ChildFallOutOfBoatSE : ScriptedEvent
     Sound splashAS;
     Sound screamAS;
     bool fallenIn;
+    GameObject lM;
+    public Transform lankMonsterSpawn;
+    public GameObject lankMonsterPrefab;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +27,20 @@ public class ChildFallOutOfBoatSE : ScriptedEvent
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.gM.player.transform.position.x > 1550)
+        {
+            if (lM == null)
+            {
+                lM = Instantiate(lankMonsterPrefab, lankMonsterSpawn.position, lankMonsterSpawn.rotation);
+            }
+        }
+        if (lM != null)
+        {
+            if (GameManager.gM.player.transform.position.x < 1470)
+            {
+                Destroy(lM);
+            }
+        }
         if (fallenIn && stage != 3)
         {
             Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, 90, 3.5f * Time.deltaTime);

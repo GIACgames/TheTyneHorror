@@ -27,7 +27,7 @@ MonoBehaviour:
     endLingerTime: 0
     pitchAdjustment: 0
     volumeMultiplier: 1
-  - dialogueString: Go get me cross from me cabin and I'll get out of yer way.
+  - dialogueString: Go get me crucifix from me cabin and I'll get out of yer way.
     facePlayer: 1
     timeToAutoSkip: 4
     readSpeedMultiplier: 1
