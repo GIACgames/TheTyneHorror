@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
     public float headBobAmount;
     public float headBobSpeed;
     float headBobVal;
+    public Transform grabbedPoser;
     
     // Start is called before the first frame update
     void Start()
@@ -85,7 +86,13 @@ public class Player : MonoBehaviour
                 Destroy(pRb);
                 head.localPosition = new Vector3(0,1.096f, 0);
             }
-            if (body.parent != boat.playerHolder)
+            if (grabbedPoser != null)
+            {
+                body.parent = grabbedPoser;
+                body.localPosition = Vector3.zero;
+                body.localRotation = Quaternion.identity;
+            }
+            else if (body.parent != boat.playerHolder)
             {
                 body.parent = boat.playerHolder;
                 body.localPosition = Vector3.zero;

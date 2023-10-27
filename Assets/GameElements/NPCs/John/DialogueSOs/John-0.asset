@@ -60,7 +60,7 @@ MonoBehaviour:
     endLingerTime: 0
     pitchAdjustment: 0
     volumeMultiplier: 1
-  - dialogueString: 'At least take me cross from me cabin on the dock, might serve
+  - dialogueString: 'At least take me crucifix from me cabin on the dock, might serve
       ye some protection of sorts. I''ll move me boat outer yer way when yer back. '
     facePlayer: 1
     timeToAutoSkip: 4

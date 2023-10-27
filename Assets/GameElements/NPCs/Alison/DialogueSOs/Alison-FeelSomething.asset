@@ -21,7 +21,7 @@ MonoBehaviour:
 
 '
   dialogueParagraphs:
-  - dialogueString: I can feel one! He's so still, not squirmy like the others.
+  - dialogueString: I can feel one! It's so still, not squirmy like the others.
     facePlayer: 1
     timeToAutoSkip: 3
     readSpeedMultiplier: 1
