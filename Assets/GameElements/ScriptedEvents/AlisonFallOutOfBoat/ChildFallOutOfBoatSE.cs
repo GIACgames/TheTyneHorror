@@ -16,6 +16,7 @@ public class ChildFallOutOfBoatSE : ScriptedEvent
     GameObject lM;
     public Transform lankMonsterSpawn;
     public GameObject lankMonsterPrefab;
+    bool hasGone;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,78 +28,86 @@ public class ChildFallOutOfBoatSE : ScriptedEvent
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.gM.player.transform.position.x > 1550)
+        if (GameManager.gM.progMan.mainQLStage >= 2) {hasGone = true;}
+        if (!hasGone)
         {
-            if (lM == null)
+            if (GameManager.gM.player.transform.position.x > 1550)
             {
-                lM = Instantiate(lankMonsterPrefab, lankMonsterSpawn.position, lankMonsterSpawn.rotation);
+                if (lM == null)
+                {
+                    lM = Instantiate(lankMonsterPrefab, lankMonsterSpawn.position, lankMonsterSpawn.rotation);
+                }
+            }
+            if (lM != null)
+            {
+                if (GameManager.gM.player.transform.position.x < 1470)
+                {
+                    Destroy(lM);
+                }
+            }
+            if (fallenIn && stage != 3)
+            {
+                Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, 90, 3.5f * Time.deltaTime);
+            }
+            if (stage == 0)
+            {
+                alison.stage = 0;
+                if (GameManager.gM.player.transform.position.x < 1505)
+                {
+                    GameManager.gM.dialogueHandler.StartDialogue(stageSOs[0]);
+                    stage = 1;
+                }
+            }
+            else if (stage == 1)
+            {
+                if (!hasFallen) {alison.stage = 1;}
+                
+                if (!hasFallen && GameManager.gM.player.transform.position.x < 1470)
+                {
+                    if (GameManager.gM.progMan.mainQLStage < 1)
+                    {
+                        GameManager.gM.progMan.mainQLStage = 1;
+                    }
+                    StartCoroutine(ChildFallOutOfBoatIE());
+                    hasFallen = true;
+                }
+            }
+            else if (stage == 2)
+            {
+                GameManager.gM.sfxManager.waterVolumeMulti = Mathf.Lerp(GameManager.gM.sfxManager.waterVolumeMulti, 1, Time.deltaTime * 1f);
+                
+                alisonGrabTrans.position = new Vector3(alisonGrabTrans.position.x, Mathf.Lerp(alisonGrabTrans.position.y, ypos, Time.deltaTime * 5), alisonGrabTrans.position.z);
+                alisonGrabTrans.position -= Vector3.right * 3.5f * Time.deltaTime;
+                ypos -= Time.deltaTime * 0.02f;
+                Vector3 disp = GameManager.gM.player.transform.position - alisonGrabTrans.position;
+                disp.y = 0;
+                alisonGrabTrans.rotation = Quaternion.LookRotation(disp.normalized, Vector3.up);
+                //alisonGrabTrans.forward = disp.normalized;
+                alison.stage = 2;
+                splashAS.source.volume = (1 - Mathf.Clamp(disp.magnitude / 25, 0, 1)) * 0.5f;
+                if (disp.magnitude > 12 || alisonGrabTrans.position.y < -10)
+                {
+                    //GameManager.gM.dialogueHandler.StartDialogue(stageSOs[2]);
+                    stage = 3;
+                    hasGone = true;
+                }
             }
         }
-        if (lM != null)
+        else
         {
-            if (GameManager.gM.player.transform.position.x < 1470)
+            if (stage == 3)
             {
-                Destroy(lM);
+                if (splashAS != null)
+                {
+                splashAS.active = false;
+                splashAS = null;
+                screamAS.active = false;
+                screamAS = null;
+                }
+                GameManager.gM.sfxManager.waterVolumeMulti = Mathf.Lerp(GameManager.gM.sfxManager.waterVolumeMulti, 0.7f, Time.deltaTime * 0.7f);
+                Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, 60, 1 * Time.deltaTime);
             }
-        }
-        if (fallenIn && stage != 3)
-        {
-            Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, 90, 3.5f * Time.deltaTime);
-        }
-        if (stage == 0)
-        {
-            alison.stage = 0;
-            if (GameManager.gM.player.transform.position.x < 1505)
-            {
-                GameManager.gM.dialogueHandler.StartDialogue(stageSOs[0]);
-                stage = 1;
-            }
-        }
-        else if (stage == 1)
-        {
-            if (!hasFallen) {alison.stage = 1;}
-            
-            if (!hasFallen && GameManager.gM.player.transform.position.x < 1470)
-            {
-                StartCoroutine(ChildFallOutOfBoatIE());
-                hasFallen = true;
-            }
-        }
-        else if (stage == 2)
-        {
-            GameManager.gM.sfxManager.waterVolumeMulti = Mathf.Lerp(GameManager.gM.sfxManager.waterVolumeMulti, 1, Time.deltaTime * 1f);
-            if (GameManager.gM.progMan.mainQLStage < 1)
-            {
-                GameManager.gM.progMan.mainQLStage = 1;
-            }
-            alisonGrabTrans.position = new Vector3(alisonGrabTrans.position.x, Mathf.Lerp(alisonGrabTrans.position.y, ypos, Time.deltaTime * 5), alisonGrabTrans.position.z);
-            alisonGrabTrans.position -= Vector3.right * 3.5f * Time.deltaTime;
-            ypos -= Time.deltaTime * 0.02f;
-            Vector3 disp = GameManager.gM.player.transform.position - alisonGrabTrans.position;
-            disp.y = 0;
-            alisonGrabTrans.rotation = Quaternion.LookRotation(disp.normalized, Vector3.up);
-            //alisonGrabTrans.forward = disp.normalized;
-            alison.stage = 2;
-            splashAS.source.volume = (1 - Mathf.Clamp(disp.magnitude / 25, 0, 1)) * 0.5f;
-            if (disp.magnitude > 12 || alisonGrabTrans.position.y < -10)
-            {
-                //GameManager.gM.dialogueHandler.StartDialogue(stageSOs[2]);
-                stage = 3;
-            }
-            
-        }
-        else if (stage == 3)
-        {
-            if (splashAS != null)
-            {
-            splashAS.active = false;
-            splashAS = null;
-            screamAS.active = false;
-            screamAS = null;
-            }
-            GameManager.gM.sfxManager.waterVolumeMulti = Mathf.Lerp(GameManager.gM.sfxManager.waterVolumeMulti, 0.7f, Time.deltaTime * 0.7f);
-            alison.stage = 3;
-            Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, 60, 1 * Time.deltaTime);
+            if (alison.stage < 3) {alison.stage = 3;}
         }
     }
     IEnumerator ChildFallOutOfBoatIE()

@@ -49,6 +49,7 @@ public class JohnsHouseScriptedEvent : ScriptedEvent
         {
             if (playerInTrigger && GameManager.gM.progMan.mainQLStage >= 3) //GetCross
             {
+                GameManager.gM.sfxManager.PlaySoundAtPoint("JohnsCabin", "Doors", frontRoomDoor.position, 1, 99, false, null, 0);
                 stage = 1;
                 transform.position = triggerLocations[1].position;
                 transform.rotation = triggerLocations[1].rotation;
@@ -69,6 +70,7 @@ public class JohnsHouseScriptedEvent : ScriptedEvent
             }
             if (isPeeping && Time.time - startPeep > 3)
             {
+                GameManager.gM.sfxManager.PlaySoundAtPoint("JohnsCabin", "Doors", frontRoomDoor.position, 1, 99, false, null, 1);
                 stage = 2;
                 transform.position = triggerLocations[2].position;
                 transform.rotation = triggerLocations[2].rotation;
@@ -104,14 +106,18 @@ public class JohnsHouseScriptedEvent : ScriptedEvent
     IEnumerator CornerMonsterCloseDoorIE()
     {
         cMEnumFlag = true;
+        GameManager.gM.sfxManager.PlaySoundAtPoint("JohnsCabin", "CMon", bathroomDoor.position, 1, 99, false, null, 0);
         cMAnim.CrossFade("CornerMonsterCloseDoor",0.01f);
         yield return new WaitForSeconds(0.5f);
+        GameManager.gM.sfxManager.PlaySoundAtPoint("JohnsCabin", "Doors", bathroomDoor.position, 1, 99, false, null, 2);
         //bathroomDoor.localRotation = Quaternion.Euler(0,0,0);
         if (playerInTrigger)
         {
 
         }
         stage = 3;
+        yield return new WaitForSeconds(0.5f);
+        GameManager.gM.sfxManager.PlaySoundAtPoint("JohnsCabin", "Doors", hallwayDoor.position, 1, 99, false, null, 3);
         cMEnumFlag = false;
     }
 }

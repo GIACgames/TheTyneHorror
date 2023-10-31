@@ -24,7 +24,7 @@ public class FloatingObjectSpawner : MonoBehaviour
             if (curOilInter == null)
             {
                 lastSpawnPlayerPos = GameManager.gM.player.transform.position;
-                curOilCan = Instantiate(oilCanPrefab, lastSpawnPlayerPos - (Vector3.right * 20) + (Vector3.forward * Random.Range(-1f,1f) * 6), Quaternion.identity);
+                curOilCan = Instantiate(oilCanPrefab, lastSpawnPlayerPos + (GameManager.gM.player.boat.transform.forward * 20), Quaternion.identity);
                 curOilInter = curOilCan.transform.GetChild(0).GetComponent<OilInteractable>();
             }
             if (curOilInter.addedToBoat || curOilInter.pickedUp)
@@ -39,7 +39,7 @@ public class FloatingObjectSpawner : MonoBehaviour
                 else if (curOilCan.transform.position.x < GameManager.gM.player.transform.position.x)
                 {
                     curOilCan.GetComponent<FloatingObject>().targetPos = GameManager.gM.player.transform.position;//new Vector3(curOilCan.transform.position.x, curOilCan.transform.position.y, GameManager.gM.player.transform.position.z);
-                    curOilCan.GetComponent<FloatingObject>().targetSpeed = 0.003f;
+                    curOilCan.GetComponent<FloatingObject>().targetSpeed = 0.007f;
                 }
                 else
                 {

@@ -23,6 +23,7 @@ public class GiantHandsEatAttack : MonoBehaviour
     bool hasLockedHead;
     float lastAttackEndTime;
     public Animation[] handAnims;
+    public int burnCount;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,7 +39,7 @@ public class GiantHandsEatAttack : MonoBehaviour
             wasAttacking = false;
             if (Time.time - lastAttackEndTime > 40 && boat.lanternInter.dangerDarkMode)
             {
-                attackStage = 1;
+                //attackStage = 1;
             }
             if (head.transform.position.y < -8)
             {
@@ -68,6 +69,7 @@ public class GiantHandsEatAttack : MonoBehaviour
                         if (attackStage != 5 && Vector3.Distance(boatRb.transform.position, new Vector3(head.position.x,boatRb.transform.position.y,head.position.z)) < 1.5f)
                         {
                             attackStage = 5;
+                            GameManager.gM.progMan.PlayerDeath();
                         }
                         if (attackStage > 4) //CompletAttack
                         {
@@ -149,7 +151,8 @@ public class GiantHandsEatAttack : MonoBehaviour
                         hand.transform.rotation = Quaternion.Lerp(hand.transform.rotation,handTargPoses[i].rotation,10f * Time.deltaTime);
                         if (Vector3.Distance(hand.transform.position, handTargPoses[i].position) < 0.05f) {
                             handAnims[i].CrossFade("GiantHandGrab", 0.2f);
-                            hand.aStage = 4; handLockPoses[i] = hand.transform.position; boatLockPos = boatRb.transform.position; if (i == 0 && !hasLockedHead) {hasLockedHead = true;lockHeadPos = headTarg.position; lockHeadPos.y = 1; } }
+                            hand.aStage = 4; handLockPoses[i] = hand.transform.position; boatLockPos = boatRb.transform.position; if (i == 0 && !hasLockedHead) {hasLockedHead = true;lockHeadPos = GameManager.gM.player.transform.position + (Vector3.right * 10);//lockHeadPos = headTarg.position; 
+                            lockHeadPos.y = 1; } }
                     }
                     if (hand.aStage == 4) 
                     {
@@ -161,7 +164,7 @@ public class GiantHandsEatAttack : MonoBehaviour
                         {
                             boatLockPos = Vector3.MoveTowards(boatLockPos, new Vector3(head.position.x,boatLockPos.y,head.position.z), pullSpeed * Time.deltaTime * 0.5f);
                         }
-                        if (hand.condemnLevel > 5) {hand.aStage = 5; handAnims[i].CrossFade("GiantHandCondemn", 0.2f);}
+                        if (hand.condemnLevel > 5) {hand.aStage = 5; handAnims[i].CrossFade("GiantHandCondemn", 0.2f); burnCount += 1;}
                     }
                     if (hand.aStage == 5) 
                     {

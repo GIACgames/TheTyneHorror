@@ -12,8 +12,13 @@ public class GameManager : MonoBehaviour
     public HintManager hintManager;
     public TransitionBehaviour transitionManager;
     public WaterManager waterManager;
+    public SaveManager saveManager;
     // Start is called before the first frame update
     void Awake()
+    {
+        gM = this;
+    }
+    void OnLevelWasLoaded()
     {
         gM = this;
     }

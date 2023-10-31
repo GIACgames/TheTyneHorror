@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - DialogueHandler
+  - Boat
   layers:
   - Default
   - TransparentFX

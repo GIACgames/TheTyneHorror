@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff2ac1a67b9afd14089f95552eb1299c, type: 3}
+  m_Name: Alison-SE2 0
+  m_EditorClassIdentifier: 
+  characterName: Alison
+  characterPitch: 1.3
+  characterVolume: 0.1
+  timeSinceLastSOtoShow: 0
+  dialogueStrings: []
+  dialogueParagraphs:
+  - dialogueString: You saved me...
+    facePlayer: 0
+    timeToAutoSkip: 4
+    readSpeedMultiplier: 1
+    canSkip: 0
+    endLingerTime: 1
+    pitchAdjustment: -0.1
+    volumeMultiplier: 1
+  - dialogueString: I think I'm ready to go home now...
+    facePlayer: 1
+    timeToAutoSkip: 4
+    readSpeedMultiplier: 0.9
+    canSkip: 0
+    endLingerTime: 0
+    pitchAdjustment: -0.2
+    volumeMultiplier: 1

@@ -1,0 +1,9 @@
+boatPos:1528.4,-0.1100479,267.7
+boatRot:0.2990132,260.9823,357.8892
+playerPos:1528.398,0.04284619,267.7054
+playerRot:359.6834,231.1332,359.2082
+inBoat:1
+oilCCount:0
+lantLevel:100
+mQLStage:0
+lowestX:1528.398

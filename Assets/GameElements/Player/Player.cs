@@ -47,6 +47,7 @@ public class Player : MonoBehaviour
     public float headBobSpeed;
     float headBobVal;
     public Transform grabbedPoser;
+    public bool isDead;
     
     // Start is called before the first frame update
     void Start()
@@ -102,6 +103,10 @@ public class Player : MonoBehaviour
         }
         else
         {
+            if (body.position.y < -4)
+            {
+                GameManager.gM.progMan.PlayerDeath();
+            }
             if (boat != null)
             {
                 boat.playerInBoat = false;
@@ -226,10 +231,16 @@ public class Player : MonoBehaviour
         }
         if (selectedInteractable != null)
         {
+            GameManager.gM.hintManager.showInterPrompt = true;
+            GameManager.gM.hintManager.interPrompt = "[E] " + selectedInteractable.interactPrompt;
             if ((Input.GetKeyDown("e") || (selectedInteractable.interId == 8 && Input.GetKeyDown("space"))) && !GameManager.gM.transitionManager.fadeEnumFlag)
             {
                 AttemptInter(selectedInteractable);
             }
+        }
+        else
+        {
+            GameManager.gM.hintManager.showInterPrompt = false;
         }
 
         Vector3 disp = head.position - itemPOV.position;

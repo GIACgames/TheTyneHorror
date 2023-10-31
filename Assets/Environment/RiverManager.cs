@@ -7,6 +7,7 @@ public class RiverManager : MonoBehaviour
     public FloatingObjectSpawner fOS;
     
     public BlowOutGremlin bOGremlin;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +31,7 @@ public class RiverManager : MonoBehaviour
         }
        
         bOGremlin.canBlowOut = GameManager.gM.player.transform.position.x < 1375;
-        bOGremlin.blowOutInterval = (GameManager.gM.progMan.mainQLStage < 2 ? 10: 250);
+        bOGremlin.blowOutInterval = (GameManager.gM.progMan.mainQLStage < 3 && !bOGremlin.hasBlownOut ? 10: 250);
+        bOGremlin.timeToBlowOut = (GameManager.gM.progMan.mainQLStage < 3 ? 3: 7);
     }
 }

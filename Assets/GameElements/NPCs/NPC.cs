@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 [System.Serializable]
@@ -27,6 +26,7 @@ public class NPC : MonoBehaviour
     public StageProperties[] stages;
     int lastStage = -1;
     public int exitId = -1;
+    public bool overrideHeadRot;
 
     // Start is called before the first frame update
     void Start()
@@ -65,9 +65,12 @@ public class NPC : MonoBehaviour
     }
     void ManageHead()
     {
-        Vector3 lookTarg = head.position + (body.forward);
-        if (faceTarget && lookAtTrans != null) {lookTarg = lookAtTrans.position;}
-        lookDirection = Vector3.Lerp(lookDirection,lookTarg - head.position, headTurnSpeed * Time.deltaTime).normalized;
-        head.rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
+        if (!overrideHeadRot)
+        {
+            Vector3 lookTarg = head.position + (body.forward);
+            if (faceTarget && lookAtTrans != null) {lookTarg = lookAtTrans.position;}
+            lookDirection = Vector3.Lerp(lookDirection,lookTarg - head.position, headTurnSpeed * Time.deltaTime).normalized;
+            head.rotation = Quaternion.LookRotation(lookDirection, body.up);
+        }
     }
 }

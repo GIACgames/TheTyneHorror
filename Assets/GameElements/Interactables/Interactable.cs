@@ -7,6 +7,7 @@ public class Interactable : MonoBehaviour
 {
     public Transform interTrans;
     public string interactKey = "e";
+    public string interactPrompt = "Grab";
     public bool boatOnly;
     public int interId;
     public int interType;

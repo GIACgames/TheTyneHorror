@@ -16,6 +16,7 @@ public class Boat : MonoBehaviour
     public Transform playerHolder;
     public Transform[] npcHolders;
     public OilInteractable[] oilCanisters;
+    public GameObject oilCanPrefab;
     public Transform[] oilCanHolders;
     public bool playerInBoat = true;
     public bool isHoldingOars;
@@ -35,6 +36,7 @@ public class Boat : MonoBehaviour
     public bool animRowStart;
     bool wasAnimRowStart;
     bool isFastRowing;
+    public bool isDummyBoat;
     // Start is called before the first frame update
     void Start()
     {
@@ -54,8 +56,8 @@ public class Boat : MonoBehaviour
         boatAnim.SetFloat("RowX", rowSpeed.x);
         boatAnim.SetFloat("RowY", rowSpeed.y);
         boatAnim.SetFloat("animSpeed", progSpeedMulti * (1.5f * (isFastRowing ? 1.3f: 1)));
-        boatMoveAS.volume = Mathf.Clamp(rb.velocity.magnitude / maxMoveSpeedForMaxVol, 0, 1) * 0.5f * GameManager.gM.sfxManager.waterVolumeMulti;
-        waterIdleAS.volume = GameManager.gM.sfxManager.waterVolumeMulti * 1f;
+        if (!isDummyBoat) {boatMoveAS.volume = Mathf.Clamp(rb.velocity.magnitude / maxMoveSpeedForMaxVol, 0, 1) * 0.5f * GameManager.gM.sfxManager.waterVolumeMulti;
+        waterIdleAS.volume = GameManager.gM.sfxManager.waterVolumeMulti * 1f;}
         ManageLantern();
     }
     void NPCEnter(NPC npc)
@@ -182,6 +184,28 @@ public class Boat : MonoBehaviour
         if (oilIndex != -1)
         {
             oilCanisters[oilIndex] = null;
+        }
+    }
+    public int GetOilCanCount()
+    {
+        int count = 0;
+        for(int i = 0; i < oilCanisters.Length; i++)
+        {
+            if (oilCanisters[i] != null){count += 1;}
+        }
+        return count;
+    }
+    public void SetOilCanCount(int oIC)
+    {
+        for(int i = 0; i < oilCanisters.Length; i++)
+        {
+            OilInteractable oI = oilCanisters[i];
+            if (oI != null) {TakeOilCan(oI);
+            Destroy(oI.gameObject);}
+        }
+        for (int i =0; i < oIC; i++)
+        {
+            AddOilCan(Instantiate(oilCanPrefab).GetComponent<OilInteractable>());
         }
     }
 }

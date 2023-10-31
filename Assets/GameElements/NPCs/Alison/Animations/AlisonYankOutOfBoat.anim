@@ -1131,7 +1131,26 @@ AnimationClip:
       m_RotationOrder: 4
     path: NPCRig
   m_ScaleCurves: []
-  m_FloatCurves: []
+  m_FloatCurves:
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: overrideHeadRot
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 1c53376f853af704690ae08beea44179, type: 3}
   m_PPtrCurves: []
   m_SampleRate: 60
   m_WrapMode: 0
@@ -1272,6 +1291,13 @@ AnimationClip:
       script: {fileID: 0}
       typeID: 4
       customType: 4
+      isPPtrCurve: 0
+    - serializedVersion: 2
+      path: 0
+      attribute: 4288877182
+      script: {fileID: 11500000, guid: 1c53376f853af704690ae08beea44179, type: 3}
+      typeID: 114
+      customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
       path: 2454282469
@@ -4875,6 +4901,25 @@ AnimationClip:
     path: NPCRig/Hip/thigh.R/shin.R/foot.R
     classID: 4
     script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: overrideHeadRot
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 1c53376f853af704690ae08beea44179, type: 3}
   m_EulerEditorCurves:
   - curve:
       serializedVersion: 2

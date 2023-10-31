@@ -111,7 +111,7 @@ public class LankyMonsterAI : MonoBehaviour
             GameManager.gM.sfxManager.PlaySoundAtPoint("Monsters", "LankyMonster", Camera.main.transform.position, 5f, 100, true, null, 0);
             yield return new WaitForSeconds(1.20f);
             hasEaten = true;
-            GameManager.gM.transitionManager.FadeTransition(1);
+            GameManager.gM.progMan.PlayerDeath();
             yield return new WaitForSeconds(5);
             isJumpScaring = false;
             

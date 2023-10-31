@@ -17,6 +17,7 @@ public class LanternInteractable : Interactable
     float lastOilBegin;
     float lastLightTime;
     public bool showLight;
+    public bool isDummyLant;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +28,7 @@ public class LanternInteractable : Interactable
     void Update()
     {
         //selectable = level < capacity - 20;
+        if (!isDummyLant) {
         if (oilCanRefiller == null || oilCanRefiller.level <= 0 || (Time.time - lastOilBegin > 0.35f && (!oilCanRefiller.grabbed && oilCanRefiller.level <= 0 || level > capacity - 5)))
         {
             if (oilCanRefiller != null){oilCanRefiller.player.itemEventTarget = null;
@@ -38,11 +40,11 @@ public class LanternInteractable : Interactable
             level = Mathf.Clamp(level + (refillSpeed * Time.deltaTime), 0, capacity);
             if (level < capacity) {oilCanRefiller.level -= (refillSpeed * Time.deltaTime);}
         }
-        
+        }
         renderer.sharedMaterial.SetFloat("_Intensity", 0f + (1 * (level / capacity)));
         if (showLight)
         {
-            lightSource.intensity = Mathf.Lerp(lightSource.intensity,minimumLightIntensity + (1 * (level / capacity)), 1 * Time.deltaTime);
+            lightSource.intensity = Mathf.Lerp(lightSource.intensity,minimumLightIntensity + (1 * (level / capacity)), 10 * Time.deltaTime);
         }
         else
         {

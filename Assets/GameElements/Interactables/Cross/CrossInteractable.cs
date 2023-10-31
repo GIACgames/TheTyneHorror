@@ -9,10 +9,12 @@ public class CrossInteractable : Interactable
     public LayerMask lM;
     public float range = 5;
     public bool isPointing;
+    public bool isBurning;
     bool lClick;
     bool rClick;
     public Transform defCrossDrop;
     public bool hasBeenPickedUp;
+    public AudioSource burnAS;
     void Start()
     {
         if (!hasBeenPickedUp) {dropTrans = defCrossDrop;}
@@ -24,18 +26,23 @@ public class CrossInteractable : Interactable
         bool wasPointing = isPointing;
         isPointing = (lClick || rClick);
         if (wasPointing != isPointing) {UpdatePlayerAnim();}
-
+        if (GameManager.gM.progMan.mainQLStage >= 3) {hasBeenPickedUp = true;}
+        isBurning = false;
         if (isPointing)
         {
             if (Physics.Raycast(raycastPoint.position, raycastPoint.forward, out RaycastHit hit, range, lM, QueryTriggerInteraction.Collide))
             {
-                if (hit.collider.GetComponent<DemonicEntity>())
+                if (hit.collider.GetComponent<DemonicEntity>() && hit.collider.GetComponent<DemonicEntity>().gameObject.activeSelf)
                 {
+                    isBurning = true;
                     hit.collider.GetComponent<DemonicEntity>().Condemn(cPower * Time.deltaTime);
                     //print("Burnt demon " + hit.collider.gameObject.name);
                 }
             }
         }
+        if (isBurning) {if (!burnAS.isPlaying) {burnAS.Play();} burnAS.volume = 1;}
+        else {if (burnAS.volume > 0.01f) {burnAS.volume -= 3f * Time.deltaTime;} else if (burnAS.isPlaying) {burnAS.Stop();}}
+
         if (hasBeenPickedUp)
         {
         if (GameManager.gM.player != null && GameManager.gM.player.inBoat)
